@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler = null;
     private Button button = null;
     private EditText editText = null;
+    private ListView listView = null;
+    private MessagesAdapter adapter = null;
     private static final int RETRIEVED_MESSAGE_COUNT = 0;
     private static final int RETRIEVED_MESSAGES = 1;
     private static final int PUT_MESSAGE_EXECUTED = 2;
@@ -44,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         handler = getHandler();
         button = (Button) findViewById(R.id.button);
         editText = (EditText) findViewById(R.id.editText);
+        listView = (ListView)findViewById(R.id.listView);
+        adapter = new MessagesAdapter(getApplicationContext());
+
+        listView.setAdapter(adapter);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        adapter.fetchData();
+        adapter.notifyDataSetChanged();
     }
 
     private Handler getHandler() {

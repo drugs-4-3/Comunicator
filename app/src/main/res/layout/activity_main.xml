@@ -44,13 +44,14 @@
             android:background="#635338"
             android:textColor="#ffffff"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/editText"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/editText"
+            app:layout_constraintRight_toRightOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="348dp"
         android:layout_height="339dp"
         tools:layout_editor_absoluteX="8dp"
