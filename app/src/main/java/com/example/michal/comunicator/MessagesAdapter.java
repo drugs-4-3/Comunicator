@@ -33,14 +33,16 @@ public class MessagesAdapter extends BaseAdapter {
     private ArrayList<String>indexList;
     private LayoutInflater li;
     Context context;
+    Handler parentHandler;
     private Handler handler;
     private int availableItems;
 
     final int RETURNED_MESSAGES = 3; // TRY TO SET THIS VALUE SAME AS IN MAINACTIVITY
 
-    public MessagesAdapter(Context context) {
+    public MessagesAdapter(Context context, Handler handler) {
         super();
         this.context = context;
+        this.parentHandler = handler;
         li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         getHandler();
@@ -51,8 +53,7 @@ public class MessagesAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-//        return messageList.size();
-        return 10;
+        return messageList.size();
     }
 
     @Override
@@ -104,7 +105,9 @@ public class MessagesAdapter extends BaseAdapter {
                         indexList.add(o.get("id").toString());
                     }
 
-                    Message msg = handler.obtainMessage(RETURNED_MESSAGES, jObject);
+//                    Message msg = handler.obtainMessage(RETURNED_MESSAGES, jObject);
+//                    msg.sendToTarget();
+                    Message msg = parentHandler.obtainMessage(RETURNED_MESSAGES, jObject);
                     msg.sendToTarget();
 
                 } catch (IOException | JSONException e) {
@@ -112,7 +115,6 @@ public class MessagesAdapter extends BaseAdapter {
                 }
             }
         });
-        notifyDataSetChanged();
     }
 
     private Handler getHandler() {
@@ -125,7 +127,7 @@ public class MessagesAdapter extends BaseAdapter {
 
                     switch (inputMessage.what) {
                         case RETURNED_MESSAGES:
-                            Toast.makeText(context, "returned messages", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
                             break;
                         default:
                             break;

@@ -32,9 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText = null;
     private ListView listView = null;
     private MessagesAdapter adapter = null;
+
+    private Runnable refreshList;
+
     private static final int RETRIEVED_MESSAGE_COUNT = 0;
     private static final int RETRIEVED_MESSAGES = 1;
     private static final int PUT_MESSAGE_EXECUTED = 2;
+    private static final int RETURNED_MESSAGES = 3;
 
     private Retrofit retrofit;
 
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.button);
         editText = (EditText) findViewById(R.id.editText);
         listView = (ListView)findViewById(R.id.listView);
-        adapter = new MessagesAdapter(getApplicationContext());
+        adapter = new MessagesAdapter(getApplicationContext(), handler);
 
         listView.setAdapter(adapter);
 
@@ -61,7 +65,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        refreshList = new Runnable() {
+            @Override
+            public void run() {
+                adapter.fetchData();
+                listView.invalidateViews();
+                listView.refreshDrawableState();
+            }
+        };
     }
 
     private void getMessageCount() {
@@ -91,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void putMessage(String txt) {
-
-    }
-
     private void putNewMessage(final String msgTxt) {
 
         AsyncTask.execute(new Runnable() {
@@ -114,14 +121,13 @@ public class MainActivity extends AppCompatActivity {
                     int response = connection.getResponseCode();
                     Message msg = handler.obtainMessage(PUT_MESSAGE_EXECUTED, response);
                     msg.sendToTarget();
+                    adapter.fetchData();
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        adapter.fetchData();
-        listView.invalidateViews();
     }
 
     private Handler getHandler() {
@@ -140,6 +146,11 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case PUT_MESSAGE_EXECUTED:
                             Toast.makeText(getApplicationContext(), "HTTP response: " + Integer.toString((Integer)inputMessage.obj), Toast.LENGTH_SHORT).show();
+                            break;
+                        case RETURNED_MESSAGES:
+                            adapter.notifyDataSetChanged();
+                            listView.invalidateViews();
+                            listView.refreshDrawableState();
                             break;
                         default:
                             break;
