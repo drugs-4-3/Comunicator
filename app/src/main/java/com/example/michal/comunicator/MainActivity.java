@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         adapter.fetchData();
-        adapter.notifyDataSetChanged();
+        listView.invalidateViews();
     }
 
     private Handler getHandler() {

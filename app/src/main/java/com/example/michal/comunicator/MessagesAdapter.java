@@ -62,21 +62,20 @@ public class MessagesAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        if (convertView != null) {
-            return convertView;
-        }
+        
         View rowView = li.inflate(R.layout.message_view, parent, false);
         TextView messageText = (TextView) rowView.findViewById(R.id.messageText);
         TextView indexText = (TextView) rowView.findViewById(R.id.indexText);
-//        messageText.setText(messageList.get(position));
+
         messageText.setText(messageList.get(position));
         indexText.setText(indexList.get(position));
+//        messageText.setText("asd");
+//        indexText.setText("asd");
         return rowView;
     }
 
