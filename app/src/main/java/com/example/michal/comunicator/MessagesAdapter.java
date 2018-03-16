@@ -22,6 +22,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Created by michal on 15.03.18.
@@ -81,6 +83,8 @@ public class MessagesAdapter extends BaseAdapter {
     }
 
     public void fetchData() {
+        indexList.clear();
+        messageList.clear();
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -100,7 +104,6 @@ public class MessagesAdapter extends BaseAdapter {
                     JSONArray jsonMsgArr = jObject.getJSONArray("Messages");
                     for (int i = 0; i < jsonMsgArr.length(); i++) {
                         JSONObject o = (JSONObject) jsonMsgArr.get(i);
-                        int a = 5;
                         messageList.add(o.get("message").toString());
                         indexList.add(o.get("id").toString());
                     }
